@@ -1,0 +1,52 @@
+<div class="todo-content">
+    <h1 class="page-title">Mis Tareas</h1>
+    <div class="todo-create">
+      <form #todoForm="ngForm" (ngSubmit)="crearTarea(todoForm)" novalidate>
+        <input type="text" id="title" class="form-control" placeholder="Escribe una tarea y presiona enter..." 
+               required
+               name="title" [(ngModel)]="nuevaTarea.titulo"
+               #titulo="ngModel" >
+        <div *ngIf="titulo.errors && titulo.dirty"
+             class="alert alert-danger">
+            <div [hidden]="!titulo.errors.required">
+              Indicar un título
+            </div>
+        </div>
+      </form>
+    </div>
+    <ul class="todo-list">
+      <li *ngFor="let tarea of tareas" [class.realizada]="tarea.realizada === true" >
+        <div class="todo-row" *ngIf="!editing || editingTodo.id != tarea.id">
+            <a class="todo-completed" (click)="marcarRealizada(tarea)">
+              <i class="material-icons toggle-completed-checkbox"></i> 
+            </a> 
+            <span class="todo-title">
+              {{tarea.titulo}}
+            </span>
+            <span class="todo-actions">
+                <a (click)="editarTarea(tarea)">
+                  <i class="material-icons edit">edit</i>
+                </a>
+                <a (click)="borrarTarea(tarea.id)">
+                  <i class="material-icons delete">clean</i>
+                </a>
+            </span>
+        </div>
+        <div class="todo-edit" *ngIf="editing && editingTodo.id === tarea.id">
+            <input class="form-control" type="text" 
+             [(ngModel)]="editingTodo.titulo" required>
+            <span class="edit-actions">
+                <a (click)="actualizarTarea(editingTodo)">
+                  <i class="material-icons">done</i>
+                </a>
+                <a (click)="limpiarEdicion()">
+                  <i class="material-icons">clear</i>
+                </a>
+            </span>
+        </div>
+      </li>
+    </ul>
+    <div class="no-todos" *ngIf="tareas && tareas.length == 0">
+        <p>Sin Tareas pendientes</p>
+    </div>
+</div>
